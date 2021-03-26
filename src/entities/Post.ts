@@ -9,7 +9,7 @@ export class Post {
     id!: number;
 
     @Field()
-    @Property({type:'text'})
+    @Property({ type: "string" })
     title!: string;
 
     @Field(()=> String)
