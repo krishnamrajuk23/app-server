@@ -14,6 +14,7 @@ import ormConfig from "./mikro-orm.config";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/Post";
 import { UserResolver } from "./resolvers/User";
+import { MyContext } from "./types";
 
 
 const main = async () => {
@@ -40,6 +41,7 @@ const main = async () => {
                 sameSite: "lax", //csrf
                 secure: __prod__ // cookies only works with https
             },
+            saveUninitialized: false,
             secret: 'kkkrishnnnnammmraaajjjjjuuu',
             resave: false
         })
@@ -50,7 +52,7 @@ const main = async () => {
             resolvers: [HelloResolver, PostResolver, UserResolver],
             validate: false
         }),
-        context: () => ({em: orm.em})
+        context: ({ req, res }): MyContext => ({em: orm.em, req, res})
     });
 
     apolloServer.applyMiddleware({ app });
