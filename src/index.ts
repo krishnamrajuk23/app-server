@@ -16,7 +16,6 @@ import { PostResolver } from "./resolvers/Post";
 import { UserResolver } from "./resolvers/User";
 import { MyContext } from "./types";
 
-
 const main = async () => {
     /*---------------Connecting to database and running migration Start -------*/
     const orm = await MikroORM.init(ormConfig);
@@ -28,6 +27,10 @@ const main = async () => {
     const RedisStore = connectRedis(session);
     const redisClient = redis.createClient();
 
+    // app.use(cors({
+    //     credentials: true,
+    //     origin: 'http://localhost:3000/'
+    // }))
     app.use(
         session({
             name: 'qid',
@@ -55,7 +58,7 @@ const main = async () => {
         context: ({ req, res }): MyContext => ({em: orm.em, req, res})
     });
 
-    apolloServer.applyMiddleware({ app });
+    apolloServer.applyMiddleware({ app, cors: {origin: '*'} });
 
     app.get("/", (_, res) => {
         res.send("hello");
